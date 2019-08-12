@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -20,11 +21,11 @@ public class Word {
 	@ApiModelProperty(value = "id of the Word", example = "2")
     private long id;
 	
-	@Column(length = 20)
-	@Length(max = 255)
+	
 	@OneToOne
+	@JoinColumn(name="category_id")
 	@ApiModelProperty(value = "Category ID key Parent for Each Word ", required = true, example = "HEALTH")
-	private Category category_id;
+	private Category category;
 	
 	@Column(length = 20)
 	@NotNull

@@ -7,8 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,6 +24,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(value = "id of the Category", example = "2")
     private long id;
+	
+	@OneToOne(mappedBy = "category")
+	@JsonIgnore
+	private Word word;
 	
 	@Column(length = 40)
 	@ApiModelProperty(value = "Category Primary Key for Each Word ", required = true, example = "HEALTH")
@@ -94,6 +102,12 @@ public class Category {
 	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
-	
+	public Word getWord() {
+		return word;
+	}
+
+	public void setWord(Word word) {
+		this.word = word;
+	}
 
 }

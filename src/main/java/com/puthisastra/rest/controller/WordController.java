@@ -19,7 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.puthisastra.rest.domain.Category;
+import com.puthisastra.rest.domain.Translation;
 import com.puthisastra.rest.domain.Word;
+import com.puthisastra.rest.dto.CreateWordDTO;
+import com.puthisastra.rest.repository.CategoryRepository;
+import com.puthisastra.rest.repository.TranslationRepository;
 import com.puthisastra.rest.repository.WordRepository;
 
 import io.swagger.annotations.Api;
@@ -35,6 +40,12 @@ public class WordController {
 
 	@Autowired
 	private WordRepository wordRepository;
+	
+	@Autowired
+	private TranslationRepository translationRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 	
 	@ApiOperation(value = "View a list of Dictionary")
 	@ApiResponses(value = {
@@ -71,10 +82,30 @@ public class WordController {
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
 	    })
-	public ResponseEntity<Word> create(@Valid @RequestBody Word word) {
-		return new ResponseEntity<>(wordRepository.save(word), HttpStatus.CREATED);
+	public ResponseEntity<Word> create(@Valid @RequestBody CreateWordDTO dataDTO) {
+		Word word = new Word();
+		
+		Category category = categoryRepository.findById(dataDTO.getCategory_id()).get();
+		word.setCategory(category);
+		
+		Translation translation = new Translation();
+		translation.setTranslate_en(dataDTO.getTranslate_en());
+		translation.setTranslate_fn(dataDTO.getTranslate_fn());
+		translation.setTranslate_kh(dataDTO.getTranslate_kh());
+		
+		translationRepository.save(translation);
+		word.setWord_en(dataDTO.getWord_en());
+		word.setWord_fn(dataDTO.getWord_fn());
+		word.setWord_kh(dataDTO.getWord_kh());
+		word.setWord_key(dataDTO.getWord_key());
+		//word.setTranslate(translate);
+	//	word.setTranslation(translation);
+		word.setTranslation(Arrays.asList(translation));
+		Word saveword = wordRepository.save(word);
+		
+		return new ResponseEntity<>(saveword, HttpStatus.CREATED);
 	}
-	
+	 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Update data of existing word")
 	@ApiResponses(value = {

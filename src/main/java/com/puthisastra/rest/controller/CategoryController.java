@@ -47,12 +47,12 @@ public class CategoryController {
 		return ResponseEntity.ok().body(categoryRepository.findAll());
 	}
 	
-	@ApiOperation(value = "Get a dictionary by id")
+	@ApiOperation(value = "Get a category by id")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 200, message = "Successfully get dictionary"),
+	        @ApiResponse(code = 200, message = "Successfully get Category"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-	        @ApiResponse(code = 404, message = "The dictionary is not existing")
+	        @ApiResponse(code = 404, message = "The Category is not existing")
 	    })
 	@GetMapping("/{id}")
 	public ResponseEntity<Category> getById(@PathVariable(value = "id") Long categoryId) {
@@ -66,7 +66,7 @@ public class CategoryController {
 	@PostMapping
 	@ApiOperation(value = "Save a new Cagegory")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 201, message = "Successfully save dictionary"),
+	        @ApiResponse(code = 201, message = "Successfully save Category"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
@@ -76,7 +76,7 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Update data of existing word")
+	@ApiOperation(value = "Update data of existing Category")
 	@ApiResponses(value = {
 	        @ApiResponse(code = 201, message = "Successfully updated dictionary"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
@@ -91,9 +91,9 @@ public class CategoryController {
 	}
 	
 	@DeleteMapping("/{id}")
-	@ApiOperation(value = "Delete existing word")
+	@ApiOperation(value = "Delete existing category")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 204, message = "Successfully deleted Dictionary"),
+	        @ApiResponse(code = 204, message = "Successfully deleted Category"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),

@@ -2,13 +2,12 @@ package com.puthisastra.rest.domain;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import com.puthisastra.rest.config.BaseEntity;
 
@@ -24,8 +23,9 @@ public class Category extends BaseEntity {
 	@ApiModelProperty(value = "id of the Category", example = "2")
     private long id;
 	
-	@OneToMany(mappedBy="category",cascade=CascadeType.ALL)   
-	private List<CategoryVocab> categoryVocab;
+	@ManyToMany
+	private List<Vocab> vocab;
+	
 	
 	@Column(length = 40)
 	@ApiModelProperty(value = "Category Primary Key for Each Category ", required = true, example = "HEALTH")

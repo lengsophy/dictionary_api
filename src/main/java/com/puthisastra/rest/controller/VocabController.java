@@ -21,14 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.puthisastra.rest.domain.Category;
 import com.puthisastra.rest.domain.Tag;
-import com.puthisastra.rest.domain.CategoryVocab;
-import com.puthisastra.rest.domain.TagVocab;
 import com.puthisastra.rest.domain.Vocab;
 import com.puthisastra.rest.dto.CreateVocabDTO;
 import com.puthisastra.rest.repository.CategoryRepository;
 import com.puthisastra.rest.repository.TagRepository;
-import com.puthisastra.rest.repository.TagVocabRepository;
-import com.puthisastra.rest.repository.CategoryVocabRepository;
 import com.puthisastra.rest.repository.VocabRepository;
 
 import io.swagger.annotations.Api;
@@ -44,12 +40,6 @@ public class VocabController {
 	
 	@Autowired
 	private TagRepository tagRepository;
-
-	@Autowired
-	private TagVocabRepository tagVocabRepository;
-	
-	@Autowired 
-	private CategoryVocabRepository categoryVocabRepository;
 	
 	@Autowired
 	private VocabRepository vocabRepository;
@@ -94,19 +84,9 @@ public class VocabController {
 	    })
 	public ResponseEntity<Vocab> create(@Valid @RequestBody CreateVocabDTO dataDTO) {
 		
-	
-		
 		Category category = categoryRepository.findById(dataDTO.getCategory_id()).get();
 		
 		Tag tag = tagRepository.findById(dataDTO.getTag_id()).get();
-		
-		CategoryVocab catVocab = new CategoryVocab();
-		
-		catVocab.setCategory(category);
-		
-		TagVocab tagVocab = new TagVocab();
-		
-		tagVocab.setTag(tag);
 		
 		Vocab newvocab = new Vocab();
 		
@@ -116,19 +96,11 @@ public class VocabController {
 		
 		newvocab.setKey_en(dataDTO.getKey_en());
 		
-		Vocab savevocab = vocabRepository.save(newvocab);
+		newvocab.setCategory(Arrays.asList(category));
 		
-		Vocab dataSave = vocabRepository.findById(savevocab.getId()).get();
+		newvocab.setTag(Arrays.asList(tag));
 		
-		catVocab.setVocab(dataSave);
-		
-		tagVocab.setVocab(dataSave);
-		
-		categoryVocabRepository.save(catVocab);
-		
-		tagVocabRepository.save(tagVocab);
-		
-		return new ResponseEntity<>(savevocab, HttpStatus.CREATED);
+		return new ResponseEntity<>(vocabRepository.save(newvocab), HttpStatus.CREATED);
 		
 		
 	}

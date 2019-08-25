@@ -42,6 +42,7 @@ public class CategoryController {
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
 	    })
+	
 	@GetMapping
 	public ResponseEntity<List<Category>> getAll() {
 		return ResponseEntity.ok().body(categoryRepository.findAll());

@@ -3,13 +3,12 @@ package com.puthisastra.rest.domain;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import com.puthisastra.rest.config.BaseEntity;
@@ -26,8 +25,9 @@ public class Tag extends BaseEntity{
 	@ApiModelProperty(value = "id of the Tag", example = "2")
     private long id;
 	
-	@OneToMany(mappedBy="tag",cascade=CascadeType.ALL)   
-	private List<TagVocab> tagVocab;
+	@ManyToMany
+	private List<Vocab> vocab;
+	
 	@Column(length = 20)
 	@Length(max = 255)
 	@NotNull

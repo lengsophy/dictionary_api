@@ -1,13 +1,12 @@
 package com.puthisastra.rest.domain;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
@@ -24,12 +23,12 @@ public class Vocab extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(value = "id of the Vocab", example = "2")
     private long id;
+
+	@ManyToMany
+	private List<Tag> Tag;
 	
-	@OneToMany(mappedBy="vocab",cascade=CascadeType.ALL)   
-	private List<TagVocab> tagVocab;
-	
-	@OneToMany(mappedBy="vocab",cascade=CascadeType.ALL)   
-	private List<CategoryVocab> categoryVocab;
+	@ManyToMany
+	private List<Category> category;
 	
 	@Column(length = 20)
 	@Length(max = 255)
@@ -81,5 +80,23 @@ public class Vocab extends BaseEntity{
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
+
+	public List<Tag> getTag() {
+		return Tag;
+	}
+
+	public void setTag(List<Tag> tag) {
+		Tag = tag;
+	}
+
+	public List<Category> getCategory() {
+		return category;
+	}
+
+	public void setCategory(List<Category> category) {
+		this.category = category;
+	}
+	
+	
 
 }

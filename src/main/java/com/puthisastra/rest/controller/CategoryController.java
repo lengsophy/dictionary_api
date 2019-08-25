@@ -86,7 +86,7 @@ public class CategoryController {
 	    })
 	public ResponseEntity<Category> update(@PathVariable(value = "id") Long categoryId, @Valid @RequestBody Category category) {
 		Category categoryInDb = categoryRepository.getOne(categoryId);
-		categoryInDb.setCategory_en(category.getCategory_en());
+		categoryInDb.setCategory_key(category.getCategory_key());
 		return new ResponseEntity<>(categoryRepository.save(categoryInDb), HttpStatus.CREATED);
 	}
 	
@@ -109,8 +109,8 @@ public class CategoryController {
 	
 	@GetMapping("/search")
 	public ResponseEntity<List<Category>> search(
-			@RequestParam(name = "q")
-			@ApiParam(allowableValues = "category_en")
+			@RequestParam(name = "search")
+			@ApiParam(allowableValues = "name,title,author")
 			String searchParams) {
 		return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
 	}

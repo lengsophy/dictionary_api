@@ -19,8 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.puthisastra.rest.domain.Tag;
-import com.puthisastra.rest.repository.TagRepository;
+import com.puthisastra.rest.domain.Category;
+import com.puthisastra.rest.domain.Translation;
+import com.puthisastra.rest.domain.Word;
+import com.puthisastra.rest.dto.CreateWordDTO;
+import com.puthisastra.rest.repository.CategoryRepository;
+import com.puthisastra.rest.repository.TranslationRepository;
+import com.puthisastra.rest.repository.WordRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,55 +34,80 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
 @RestController
-@RequestMapping("/tags")
-@Api(value="tags", description="Tag REST endpoint")
-public class TagController {
+@RequestMapping("/words")
+@Api(value="words", description="Word REST endpoint")
+public class WordController {
 
 	@Autowired
-	private TagRepository tagRepository;
+	private WordRepository wordRepository;
 	
-	@ApiOperation(value = "View a list of Tags")
+	@Autowired
+	private TranslationRepository translationRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
+	@ApiOperation(value = "View a list of Dictionary")
 	@ApiResponses(value = {
 	        @ApiResponse(code = 200, message = "Successfully retrieved list"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
 	    })
 	@GetMapping
-	public ResponseEntity<List<Tag>> getAll() {
-		return ResponseEntity.ok().body(tagRepository.findAll());
+	public ResponseEntity<List<Word>> getAll() {
+		return ResponseEntity.ok().body(wordRepository.findAll());
 	}
 	
-	@ApiOperation(value = "Get a Tags by id")
+	@ApiOperation(value = "Get a dictionary by id")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 200, message = "Successfully get Tags"),
+	        @ApiResponse(code = 200, message = "Successfully get dictionary"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-	        @ApiResponse(code = 404, message = "The Tag is not existing")
+	        @ApiResponse(code = 404, message = "The dictionary is not existing")
 	    })
-	
 	@GetMapping("/{id}")
-	public ResponseEntity<Tag> getById(@PathVariable(value = "id") Long tagId) {
-		Optional<Tag> tag = tagRepository.findById(tagId);
-		if (!tag.isPresent()) {
+	public ResponseEntity<Word> getById(@PathVariable(value = "id") Long wordId) {
+		Optional<Word> word = wordRepository.findById(wordId);
+		if (!word.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return ResponseEntity.ok().body(tag.get());
+		return ResponseEntity.ok().body(word.get());
 	}
 	
 	@PostMapping
-	@ApiOperation(value = "Save a new Cagegory")
+	@ApiOperation(value = "Save a new dictionary")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 201, message = "Successfully save Tag"),
+	        @ApiResponse(code = 201, message = "Successfully save dictionary"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
 	    })
-	public ResponseEntity<Tag> create(@Valid @RequestBody Tag tag) {
-		return new ResponseEntity<>(tagRepository.save(tag), HttpStatus.CREATED);
+	public ResponseEntity<Word> create(@Valid @RequestBody CreateWordDTO dataDTO) {
+		Word word = new Word();
+		
+		Category category = categoryRepository.findById(dataDTO.getCategory_id()).get();
+		word.setCategory(category);
+		
+		Translation translation = new Translation();
+		translation.setTranslate_en(dataDTO.getTranslate_en());
+		translation.setTranslate_fn(dataDTO.getTranslate_fn());
+		translation.setTranslate_kh(dataDTO.getTranslate_kh());
+		
+		translationRepository.save(translation);
+		word.setWord_en(dataDTO.getWord_en());
+		word.setWord_fn(dataDTO.getWord_fn());
+		word.setWord_kh(dataDTO.getWord_kh());
+		word.setWord_key(dataDTO.getWord_key());
+		//word.setTranslate(translate);
+	//	word.setTranslation(translation);
+		word.setTranslation(Arrays.asList(translation));
+		Word saveword = wordRepository.save(word);
+		
+		return new ResponseEntity<>(saveword, HttpStatus.CREATED);
 	}
-	
+	 
 	@PutMapping("/{id}")
-	@ApiOperation(value = "Update data of existing Tag")
+	@ApiOperation(value = "Update data of existing word")
 	@ApiResponses(value = {
 	        @ApiResponse(code = 201, message = "Successfully updated dictionary"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
@@ -85,35 +115,35 @@ public class TagController {
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 	        @ApiResponse(code = 404, message = "Word not found")
 	    })
-	public ResponseEntity<Tag> update(@PathVariable(value = "id") Long tagId, @Valid @RequestBody Tag tag) {
-		Tag tagInDb = tagRepository.getOne(tagId);
-		tagInDb.setTerm(tag.getTerm());
-		tagInDb.setYear(tag.getYear());
-		return new ResponseEntity<>(tagRepository.save(tagInDb), HttpStatus.CREATED);
+	public ResponseEntity<Word> update(@PathVariable(value = "id") Long wordId, @Valid @RequestBody Word word) {
+		Word wordInDb = wordRepository.getOne(wordId);
+		wordInDb.setWord_key(word.getWord_key());
+		return new ResponseEntity<>(wordRepository.save(wordInDb), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/{id}")
-	@ApiOperation(value = "Delete existing tag")
+	@ApiOperation(value = "Delete existing word")
 	@ApiResponses(value = {
-	        @ApiResponse(code = 204, message = "Successfully deleted Tag"),
+	        @ApiResponse(code = 204, message = "Successfully deleted Dictionary"),
 	        @ApiResponse(code = 400, message = "Request parameters are invalid"),
 	        @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
 	        @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-	        @ApiResponse(code = 404, message = "Tag not found")
+	        @ApiResponse(code = 404, message = "Dictionary not found")
 	    })
 	public ResponseEntity<Void> delete(@PathVariable(value = "id") Long wordId) {
-		if (!tagRepository.existsById(wordId)) {
+		if (!wordRepository.existsById(wordId)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		tagRepository.deleteById(wordId);
+		wordRepository.deleteById(wordId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<Tag>> search(
+	public ResponseEntity<List<Word>> search(
 			@RequestParam(name = "search")
-			@ApiParam(allowableValues = "term,year")
+			@ApiParam(allowableValues = "name,title,author")
 			String searchParams) {
 		return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
 	}
+	
 }

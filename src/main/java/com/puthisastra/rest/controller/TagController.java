@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("/api/v1/tags")
 @Api(value="tags", description="Tag REST endpoint")
 public class TagController {
 

@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
 @RestController
-@RequestMapping("/vocabs")
+@RequestMapping("/api/v1/vocabs")
 @Api(value="vocabs", description="Vocab REST endpoint")
 public class VocabController {
 	

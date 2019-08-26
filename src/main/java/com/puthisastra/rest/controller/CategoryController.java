@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
 @RestController
-@RequestMapping("/categorys")
+@RequestMapping("/api/v1/categorys")
 @Api(value="categorys", description="Category REST endpoint")
 public class CategoryController {
 

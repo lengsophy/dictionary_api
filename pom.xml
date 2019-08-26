@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.puthisastra</groupId>
-	<artifactId>rest</artifactId>
+	<artifactId>up_dictionary</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rest</name>
+	<name>up_dictionary</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

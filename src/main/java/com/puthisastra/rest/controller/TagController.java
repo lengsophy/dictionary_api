@@ -1,7 +1,9 @@
 package com.puthisastra.rest.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.puthisastra.rest.domain.Tag;
+import com.puthisastra.rest.domain.Vocab;
 import com.puthisastra.rest.repository.TagRepository;
+import com.puthisastra.rest.repository.VocabRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +39,9 @@ public class TagController {
 
 	@Autowired
 	private TagRepository tagRepository;
+	
+	@Autowired
+	private VocabRepository vocabularyRepository;
 	
 	@ApiOperation(value = "View a list of Tags")
 	@ApiResponses(value = {
@@ -109,11 +116,30 @@ public class TagController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping("/search")
-	public ResponseEntity<List<Tag>> search(
-			@RequestParam(name = "search")
-			@ApiParam(allowableValues = "term,year")
-			String searchParams) {
-		return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
+	@GetMapping("/search/{year}/{term}")
+//	@ApiOperation(value = "Search Tags by input text")
+	public ResponseEntity<Map<String, Object>> SearchByCategory(
+			@RequestParam(value="year",required=true) String year,
+			@RequestParam(value="term",required=true) String term) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+
+			List<Vocab> result = vocabularyRepository.searchByTags(year, term);
+			if (!result.isEmpty()) {
+				map.put("data", result);
+				map.put("message", "Search found");
+				map.put("status", true);
+			} else {
+				map.put("message", "Search not found");
+				map.put("status", false);
+			}
+		} catch (Exception e) {
+			map.put("message", "Something when wrong!");
+			map.put("status", false);
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
+	
 }

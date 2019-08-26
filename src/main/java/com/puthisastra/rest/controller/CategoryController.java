@@ -1,7 +1,9 @@
 package com.puthisastra.rest.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.puthisastra.rest.domain.Category;
+import com.puthisastra.rest.domain.Vocab;
 import com.puthisastra.rest.repository.CategoryRepository;
+import com.puthisastra.rest.repository.VocabRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +39,9 @@ public class CategoryController {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private VocabRepository vocabRepository;
 	
 	@ApiOperation(value = "View a list of Categorys")
 	@ApiResponses(value = {
@@ -108,12 +115,29 @@ public class CategoryController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping("/search")
-	public ResponseEntity<List<Category>> search(
-			@RequestParam(name = "q")
-			@ApiParam(allowableValues = "category_en")
-			String searchParams) {
-		return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
+	@GetMapping("/search/{key}")
+//	@ApiOperation(value = "Search Category by input text")
+	public ResponseEntity<Map<String, Object>> SearchByCategory(
+			@RequestParam(value="key",required=true) String searchParam) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+
+			List<Vocab> result = vocabRepository.searchByCategoryEnKey(searchParam);
+			if (!result.isEmpty()) {
+				map.put("data", result);
+				map.put("message", "Search found");
+				map.put("status", true);
+			} else {
+				map.put("message", "Search not found");
+				map.put("status", false);
+			}
+		} catch (Exception e) {
+			map.put("message", "Something when wrong!");
+			map.put("status", false);
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
-	
+
 }

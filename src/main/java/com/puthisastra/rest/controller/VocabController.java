@@ -1,7 +1,9 @@
 package com.puthisastra.rest.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -136,12 +138,30 @@ public class VocabController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping("/search")
-	public ResponseEntity<List<Vocab>> search(
-			@RequestParam(name = "search")
-			@ApiParam(allowableValues = "key_en")
-			String searchParams) {
-		return new ResponseEntity<>(Arrays.asList(), HttpStatus.OK);
+	
+	@GetMapping("/search/{key}")
+//	@ApiOperation(value = "Search Vocab en key by input text")
+	public ResponseEntity<Map<String, Object>> SearchByCategory(
+			@RequestParam(value="key",required=true) String searchParam) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+
+			List<Vocab> result = vocabRepository.searchByVocabEnKey(searchParam);
+			if (!result.isEmpty()) {
+				map.put("data", result);
+				map.put("message", "Search found");
+				map.put("status", true);
+			} else {
+				map.put("message", "Search not found");
+				map.put("status", false);
+			}
+		} catch (Exception e) {
+			map.put("message", "Something when wrong!");
+			map.put("status", false);
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
 }

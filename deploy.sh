@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TAG_VERSION=0.0.4
+TAG_VERSION=0.0.6
 
 # remove target folder
 rm -rf target/ &&

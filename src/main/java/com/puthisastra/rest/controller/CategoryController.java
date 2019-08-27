@@ -27,6 +27,7 @@ import com.puthisastra.rest.repository.VocabRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
@@ -113,9 +114,11 @@ public class CategoryController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping("/search/{key}")
-	public ResponseEntity<Map<String, Object>> SearchByCategory(
-			@RequestParam(value="key",required=true) String searchParam) {
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>> search(
+			@RequestParam(name = "q")
+			@ApiParam(allowableValues = "category_en")
+			String searchParam) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {

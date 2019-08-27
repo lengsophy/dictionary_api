@@ -116,12 +116,13 @@ public class TagController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping("/search/{year}/{term}")
-//	@ApiOperation(value = "Search Tags by input text")
-	public ResponseEntity<Map<String, Object>> SearchByCategory(
-			@RequestParam(value="year",required=true) String year,
-			@RequestParam(value="term",required=true) String term) {
-		
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>> search(
+			@RequestParam(name = "year", required=true)
+			@ApiParam(allowableValues = "year")
+			String year, @RequestParam(name = "term", required=true)
+			@ApiParam(allowableValues = "term")
+			String term) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 

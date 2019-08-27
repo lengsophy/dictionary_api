@@ -1,6 +1,5 @@
 package com.puthisastra.rest.controller;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import com.puthisastra.rest.repository.VocabRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
 
@@ -116,7 +114,6 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/search/{key}")
-//	@ApiOperation(value = "Search Category by input text")
 	public ResponseEntity<Map<String, Object>> SearchByCategory(
 			@RequestParam(value="key",required=true) String searchParam) {
 		

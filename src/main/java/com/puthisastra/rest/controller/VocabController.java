@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.puthisastra.rest.domain.Category;
@@ -138,12 +139,11 @@ public class VocabController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	
-	@GetMapping("/search/{key}")
-//	@ApiOperation(value = "Search Vocab en key by input text")
-	public ResponseEntity<Map<String, Object>> SearchByCategory(
-			@RequestParam(value="key",required=true) String searchParam) {
-		
+	@GetMapping("/search")
+	public ResponseEntity<Map<String, Object>> search(
+			@RequestParam(name = "q", required=true)
+			@ApiParam(allowableValues = "key_en")
+			String searchParam) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 
@@ -163,5 +163,4 @@ public class VocabController {
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
-	
 }

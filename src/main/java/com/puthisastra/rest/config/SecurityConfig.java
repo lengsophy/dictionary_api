@@ -22,9 +22,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		anyRequest().
 //		authenticated().
 //		and().httpBasic();
-		 http
-	     .authorizeRequests()
-	     .anyRequest().permitAll();
+		http.csrf().
+		disable().
+		authorizeRequests().
+		anyRequest().permitAll();
 	}
 	
 	@Autowired

@@ -36,8 +36,7 @@ public class Vocab extends BaseEntity{
 	@ApiModelProperty(value = "Vocab in English", required = true, example = "Book")
 	private String key_en;
 	
-	@Column(length = 20)
-	@Length(max = 255)
+	@Column(length = 255)
 	@NotNull
 	@ApiModelProperty(value = "Vocab's Description in English", required = true, example = "Book Is somethink that can read and write on!")
 	private String description_en;
